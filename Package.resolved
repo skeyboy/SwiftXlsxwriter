@@ -1,0 +1,15 @@
+{
+  "originHash" : "52e66a28d5c9a7ce1ad130645bdb6ce1fe0f7d425ff91cb10d2171f645d3b37a",
+  "pins" : [
+    {
+      "identity" : "libxlsxwriter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/skeyboy/libxlsxwriter",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ccd900dc7fa52453cc423646d2dd3b93897a4494"
+      }
+    }
+  ],
+  "version" : 3
+}
