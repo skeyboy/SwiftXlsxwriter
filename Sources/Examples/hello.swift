@@ -14,10 +14,22 @@ import SwiftXlsxwriter
 @main
 struct Hello {
     static func main() {
-        print("Hello", #file, #line)
+        
         let workbook = SXWorkbook("hello_world")
         let worksheet = try? workbook.add(worksheet: "A")
+        worksheet?.onError = { error in
+            debugPrint(error)
+        }
         worksheet?.write(vale: "Hello world", row: 0, col: 0)
-        workbook.close()
+
+        let format: SXFormat = workbook.newFormat
+        format.blod()
+        
+        worksheet?.write(vale: "Hi with format", row: 2, col: 1, format: format)
+            .write(value: 1222, row: 3, col: 1)
+
+        let result = workbook.close()
+
+        print("result: \(result)")
     }
 }

@@ -1,31 +1,31 @@
 import libxlsxwriter
 
-public class SXWorkbook {
+public class SXWorkbook : SXBase<lxw_workbook> {
     public private(set) var fileName: String
     public private(set) var isOpened = true
-    public private(set) lazy var workbook: UnsafeMutablePointer<lxw_workbook> = workbook_new(
-        fileName
-    )
-    {
+    public internal(set) var workbook: UnsafeMutablePointer<lxw_workbook> {
         didSet {
             isOpened = true
         }
     }
+    
     public init(_ fileName: String, extension fileExtension: String = "xlsx") {
+        var tempFileName = fileName
         if !fileName.hasSuffix("xlsx") {
-            self.fileName = fileName + "." + fileExtension
+            tempFileName = fileName + "." + fileExtension
         } else {
-            self.fileName = fileName
+            tempFileName = fileName
         }
-        _ = workbook
+        self.fileName = tempFileName
+        let workbook = workbook_new(tempFileName)
+        self.workbook = workbook!
+        super.init(workbook!.pointee)
     }
 
     public func add(worksheet name: String = "Sheet A") throws
         -> SXWorksheet?
     {
-
-        let pWorksheet = workbook_add_worksheet(workbook, name)
-        return try SXWorksheet(pWorksheet)
+        return try SXWorksheet(self, sheetName: name)
     }
 
     deinit {
@@ -38,6 +38,6 @@ public class SXWorkbook {
     @discardableResult
     public func close() -> SXError {
         isOpened = false
-        return workbook_close(workbook).error
+        return workbook_close(&baseSXValue).error
     }
 }

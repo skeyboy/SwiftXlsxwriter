@@ -24,10 +24,24 @@ final class SwiftXlsxwriterTests: XCTestCase {
         let workbook = SXWorkbook(fileName)
         let sheetA = try? workbook.add(worksheet: "A")
         assert(sheetA != nil, "add sheet failed")
+        sheetA?.onError = { err in
+            assert(err, "write string value failed")
+        }
+        sheetA?.write(vale: "Hello world", row: 0, col: 0)
+    }
+
+    func testSXError() {
+        var cErrorCode: UInt32 = 1
+        var sxError = SXError(rawValue: cErrorCode)
         assert(
-            sheetA?.write(vale: "Hello world", row: 0, col: 0),
-            "write string value failed"
-        )
+            sxError == .memoryMallocFailed,
+            "c errocode 1 convert to swift error is memoryMallocFailed")
+
+        cErrorCode = 2
+        sxError = SXError(rawValue: cErrorCode)
+        assert(
+            sxError == .creatingXlsFile,
+            "c errocode 1 convert to swift error is creatingXlsFile")
     }
 }
 
